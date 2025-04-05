@@ -1,32 +1,35 @@
-import discord
 from discord.ext import commands
-import re
-from db import get_minecraft_id 
+from db import get_discord_id
+from util.death_utils import is_death_message
 
 class Deaths(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.deaths_channel_name = 'deaths' 
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        """Listen for death logs and create a message in the 'deaths' channel."""
-        if message.channel.name == 'deaths':  
-            death_pattern = re.compile(r"(\w+) \[.*\] (died|was slain)")
-            match = death_pattern.search(message.content)
-            if match:
-                minecraft_id = match.group(1)
-                discord_id = get_minecraft_id(minecraft_id)
-                
-                deaths_channel = discord.utils.get(message.guild.text_channels, name="deaths")
-                if deaths_channel:
-                    if discord_id:
-                        user = await self.bot.fetch_user(discord_id)
-                        if user:
-                            await deaths_channel.send(f"{user.mention} has died in the game!")
-                        else:
-                            await deaths_channel.send(f"{minecraft_id} has died in the game!")
-                    else:
-                        await deaths_channel.send(f"{minecraft_id} has died in the game, but no Discord user is linked.")
-                    
-def setup(bot):
-    bot.add_cog(Deaths(bot))
+    def get_channel_by_name(self, guild, channel_name):
+        for channel in guild.channels:
+            if channel.name == channel_name:
+                return channel
+        return None
+
+    def process_death_events(self, events):
+        for event in events:
+            message = self.get_death_message(event)
+            if message:
+                guild = self.bot.guilds[0]
+                channel = self.get_channel_by_name(guild, self.deaths_channel_name)
+                if channel:
+                    self.bot.loop.create_task(channel.send(message))
+
+    def get_death_message(self, event):
+        if is_death_message(event.event_description):
+            discord_id = get_discord_id(event.player)
+            if discord_id:
+                return f"<@{discord_id}> {event.event_description}"
+            else:
+                return f"{event.player} {event.event_description}"
+        return None
+
+async def setup(bot):
+    await bot.add_cog(Deaths(bot))
