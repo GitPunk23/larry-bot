@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 import os
-import asyncio
-import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,18 +17,9 @@ intents.message_content = True
 # Initialize the bot
 bot = commands.Bot(command_prefix='/', intents=intents)
 
-# Deaths channel name
-DEATHS_CHANNEL_NAME = 'deaths'
 
 @bot.event
 async def on_ready():
     print(f"Bot is connected as {bot.user}")
-
-async def post_death_to_discord(message):
-    """Post the death message to the Discord #deaths channel."""
-    for guild in bot.guilds:
-        channel = discord.utils.get(guild.text_channels, name=DEATHS_CHANNEL_NAME)
-        if channel:
-            await channel.send(f"💀 {message}")
 
 bot.run(BOT_TOKEN)
