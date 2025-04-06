@@ -5,7 +5,7 @@ import logging
 
 load_dotenv()
 DB_PATH = os.getenv('DB_PATH')
-
+print(DB_PATH)
 if DB_PATH == ":memory:":
     DB_PATH = "file:memdb1?mode=memory&cache=shared"
     conn = sqlite3.connect(DB_PATH, uri=True)
