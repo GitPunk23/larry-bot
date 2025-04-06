@@ -11,6 +11,7 @@ class Tasks(commands.Cog):
 
     @tasks.loop(seconds=30)
     async def check_logs(self):
+        print("Checking for new server log events")
         new_events, self.last_processed_timestamp = get_new_events(self.last_processed_timestamp)
         if new_events:
             deaths_cog = self.bot.get_cog('Deaths')
