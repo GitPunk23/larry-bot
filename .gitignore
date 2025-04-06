@@ -2,3 +2,6 @@
 bot-env
 .idea
 *.iml
+/data
+/logs
+.venv

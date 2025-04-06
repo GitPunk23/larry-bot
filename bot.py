@@ -1,4 +1,3 @@
-import logging
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
@@ -23,6 +22,7 @@ async def load_extensions():
     await bot.load_extension('cogs.deaths')
     await bot.load_extension('cogs.tasks')
     await bot.load_extension('cogs.commands')
+    await bot.load_extension('cogs.logfilehandler')
 
 async def main():
     init_db()
