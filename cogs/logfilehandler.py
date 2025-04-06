@@ -13,7 +13,7 @@ class LogFileHandler(commands.Cog):
 
     LOG_FILE_PATH = os.getenv('LOG_FILE_PATH')
     LOG_PATTERN = re.compile(r"\[([^\]]+)\] \[Server thread/INFO\]: (.+)")
-    LAST_LINE_POSITION = 0
+    LAST_LINE_POSITION = 417
 
     @tasks.loop(seconds=15)
     async def check_logs(self):
@@ -30,10 +30,12 @@ class LogFileHandler(commands.Cog):
         await self.bot.wait_until_ready()
 
     def get_lines_since_last(self, file_path):
+        lines = []
         with open(file_path, 'r') as file:
-            file.seek(self.LAST_LINE_POSITION)
-            lines = file.readlines()
-            self.LAST_LINE_POSITION = file.tell()
+            for current_line_number, line in enumerate(file):
+                if current_line_number >= self.LAST_LINE_POSITION:
+                    lines.append(line)
+            self.LAST_LINE_POSITION = current_line_number + 1
         return lines
 
     def get_new_events(self):
