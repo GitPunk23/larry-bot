@@ -12,6 +12,7 @@ def get_new_events(last_processed_timestamp):
     """Read the log file and return new events based on the last processed timestamp."""
     new_events = []
     with open(LOG_FILE_PATH, 'r') as log_file:
+        print(log_file)
         for line in log_file:
             event = Event.from_log_line(line)
             if event:

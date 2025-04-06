@@ -47,7 +47,7 @@ class Commands(commands.Cog):
         java_id = get_java_id(discord_id)
         bedrock_id = get_bedrock_id(discord_id)
 
-        response = f"Java={java_id}\nBedrock={bedrock_id}"
+        response = f"Usernames for <@{ctx.author.id}>\nJava={java_id}\nBedrock={bedrock_id}"
         await ctx.send(response)
 
 async def setup(bot):
