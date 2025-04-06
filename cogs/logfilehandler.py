@@ -13,7 +13,7 @@ class LogFileHandler(commands.Cog):
 
     LOG_FILE_PATH = os.getenv('LOG_FILE_PATH')
     LOG_PATTERN = re.compile(r"\[([^\]]+)\] \[Server thread/INFO\]: (.+)")
-    LAST_LINE_POSITION = 417
+    LAST_LINE_POSITION = 0
 
     @tasks.loop(seconds=15)
     async def check_logs(self):
