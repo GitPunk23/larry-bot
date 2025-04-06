@@ -14,6 +14,7 @@ class Tasks(commands.Cog):
         print("Checking for new server log events")
         new_events, self.last_processed_timestamp = get_new_events(self.last_processed_timestamp)
         if new_events:
+            print(f"{len(new_events)} new events found")
             deaths_cog = self.bot.get_cog('Deaths')
             if deaths_cog:
                 deaths_cog.process_death_events(new_events)
